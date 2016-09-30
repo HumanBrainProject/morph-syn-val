@@ -1,0 +1,51 @@
+<template>
+  <section class="au-animate">
+    <h2>${heading}</h2>
+    <div class='container-fluid'>
+      <div class='row'>Synthesis jobs, which have been run from this browser:</div>
+      <div class='row'>
+        <ul>
+          <li repeat.for="jobId of jobIds">
+            <a href='https://up.humanbrainproject.eu/#/job/${jobId}/?back=%2Fjob-manager' target="_blank">${synthesisJobs[jobId].job_name}</a>
+            <span with.bind='synthesisJobs[jobId].output'>${name} ${uuid}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <form class='form-horizontal' role='form' submit.delegate='submit()'>
+      <div class='form-group'>
+        <label for='taskName' class='col-sm-2 control-label'>Validation task name</label>
+        <div class="col-sm-5">
+          <input type='text' value.bind='validationTaskName' class='form-control' id='taskName' readonly>
+        </div>
+        <label for='validationTaskVersion' class='col-sm-1 control-label'>version</label>
+        <div class="col-sm-1">
+          <select value.bind='validationTaskVersion' class="form-control" id='synthesisTaskVersion'>
+            <option repeat.for="version of validationTaskVersions">${version}</option>
+          </select>
+        </div>
+      </div>
+      <div class='form-group'>
+        <label for='dsPath' class='col-sm-2 control-label'>Document storage path</label>
+        <div class="col-sm-5">
+          <input type='text' value.bind='dsPath' class='form-control' id='dsPath'>
+        </div>
+      </div>
+      <div class='form-group'>
+        <label for='bioRefUuid' class='col-sm-2 control-label'>Biological reference set uuid</label>
+        <div class="col-sm-5">
+          <input type='text' value.bind='bioRefUuid' class='form-control' id='bioRefUuid' readonly>
+        </div>
+      </div>
+      <div class='form-group'>
+        <label for='synthesisOutputUuid' class='col-sm-2 control-label'>Synthesis output uuid</label>
+        <div class="col-sm-5">
+          <input type='text' value.bind='synthesisOutputUuid' class='form-control' id='synthesisOutputUuid'>
+        </div>
+      </div>
+      <div class='form-group'>
+        <button type='submit' class='btn btn-default col-sm-offset-2 col-sm-2'>Run validation task</button>
+      </div>
+    </form>
+  </section>
+</template>

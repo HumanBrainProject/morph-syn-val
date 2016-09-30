@@ -1,0 +1,108 @@
+<template>
+  <section class='au-animate' class='container-fluid'>
+    <br />
+    <div class='row'>
+      <div class='col-sm-12'>
+        <form class='form-horizontal' role='form' submit.delegate='submit()'>
+          <fieldset disabled.bind='launchingJob'>
+            <div class='form-group'>
+              <label for='taskName' class='col-sm-2 control-label'>Task name</label>
+              <div class='col-sm-7'>
+                <input type='text' value.bind='synthesisTaskName' class='form-control' id='taskName' readonly>
+              </div>
+              <label for='synthesisTaskVersion' class='col-sm-1 control-label'>Version</label>
+              <div class='col-sm-1'>
+                <select value.bind='synthesisTaskVersion' class='form-control' id='synthesisTaskVersion'>
+                  <option repeat.for='version of synthesisTaskVersions'>${version}</option>
+                </select>
+              </div>
+              <div>
+                <button class='btn btn-default fa fa-refresh' click.trigger='refreshSynthesisTaskVersions()'></button>
+              </div>
+            </div>
+            <div class='form-group'>
+              <label for='dsPath' class='col-sm-2 control-label'>Doc storage path</label>
+              <div class='col-sm-7'>
+                <input type='text' value.bind='dsPath' class='form-control' id='dsPath'>
+              </div>
+            </div>
+            <div class='form-group'>
+              <label for='gpfsPath' class='col-sm-2 control-label'>GPFS output path</label>
+              <div class='col-sm-7'>
+                <input type='text' value.bind='gpfsPath' class='form-control' id='gpfsPath'>
+              </div>
+            </div>
+            <div class='form-group'>
+              <label for='randomSeed' class='col-sm-2 control-label'>Random seed</label>
+              <div class='col-sm-7'>
+                <input type='text' value.bind='randomSeed' class='form-control' id='randomSeed' placeholder='random seed'>
+              </div>
+            </div>
+            <div class='form-group'>
+              <label for='brainRegion' class='col-sm-2 control-label'>Brain region</label>
+              <div class='col-sm-7'>
+                <select value.bind='brainRegion' class='form-control' id='brainRegion'>
+                  <option repeat.for='region of brainRegionValues'>${region}</option>
+                </select>
+              </div>
+            </div>
+            <div class='form-group'>
+              <label for='cells' class='col-sm-2 control-label'>Number of cells</label>
+              <div class='col-sm-7'>
+                <input type='number' step='1' value.bind='cells' class='form-control' id='cells'>
+              </div>
+            </div>
+            <div class='form-group'>
+              <button type='submit' class='btn btn-default btn-primary col-sm-offset-7'>Run synthesis task</button>
+            </div>
+          </fieldset>
+        </form>
+      </div>      
+    </div>
+    <div class='row'>
+      <div class='col-sm-12'>
+        <div class='row'><h3>Synthesis jobs which have been run from this browser</h3></div>
+        <div class='row'>
+          <table class='table table-hover table-vcenter'>
+            <tbody>
+              <tr>
+                <th>Job name</th>
+                <th>UUID</th>
+                <th>Status</th>
+                <th class='text-center'>Show details</th>
+                <th class='text-center'>Refresh</th>
+                <th class='text-center'>Use in validation</th>
+                <th class='text-center'>Remove</th>
+              </tr>
+              <tr repeat.for='[uuid, job] of jobs'>
+                <td class='vertical-align'>
+                  <span>${job.job_name}</span>
+                </td>
+                <td class='vertical-align'>
+                  <code>${uuid}</code>
+                </td>
+                <td class='vertical-align'>
+                  ${job.state}
+                </td>
+                <td class='text-center'>
+                  <a href='https://up.humanbrainproject.eu/#/job/${uuid}/?back=%2Fjob-manager' target='_blank'>
+                    <button class='btn btn-default fa fa-link'></button>
+                  </a>
+                </td>
+                <td class='text-center'>
+                  <button click.trigger='refreshJob(job.job_id)' class='btn btn-default fa fa-refresh'></button>
+                </td>
+                <td class='text-center'>
+                  <button click.trigger='validateJob(job.job_id)' class='btn btn-default fa fa-share'></button>
+                </td>
+                <td class='text-center'>
+                  <button click.trigger='removeJob(job.job_id)' class='btn btn-default fa fa-remove'></button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+</template>
