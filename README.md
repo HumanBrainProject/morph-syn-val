@@ -4,6 +4,16 @@ Application provides convenient way to parametrize and run morphology synthesis/
 
 ## Running The App
 
+### Standalone
+
+[https://humanbrainproject.github.io/morph-syn-val/](https://humanbrainproject.github.io/morph-syn-val/)
+
+### From Collaboratory
+
+Add "Markdown" App to your navigator and select "Content from an external source". Use the following link [https://humanbrainproject.github.io/morph-syn-val/](https://humanbrainproject.github.io/morph-syn-val/) as the external source.
+
+### Development
+
 To run the app, follow these steps.
 
 1. Ensure that [NodeJS](http://nodejs.org/) is installed. This provides the platform on which the build tooling runs.
@@ -39,7 +49,7 @@ To run the app, follow these steps.
   ```
 7. Browse to [https://localhost:9000](https://localhost:9000) to see the app. You can make changes in the code found under `src` and the browser should auto-refresh itself as you save files.
 
-> The Skeleton App uses [BrowserSync](http://www.browsersync.io/) for automated page refreshes on code/markup changes concurrently across multiple browsers. If you prefer to disable the mirroring feature set the [ghostMode option](http://www.browsersync.io/docs/options/#option-ghostMode) to false
+> The App uses [BrowserSync](http://www.browsersync.io/) for automated page refreshes on code/markup changes concurrently across multiple browsers. If you prefer to disable the mirroring feature set the [ghostMode option](http://www.browsersync.io/docs/options/#option-ghostMode) to false
 
 
 ## Bundling

@@ -1,6 +1,6 @@
 {
   "name": "morph-syn-val",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Morphology Synthesis-Validation Collaboratory App",
   "homepage": "https://collab.humanbrainproject.eu",
   "license": "Apache License, Version 2.0",

@@ -21,7 +21,7 @@
               </div>
             </div>
             <div class='form-group'>
-              <label for='dsPath' class='col-sm-2 control-label'>Doc storage path</label>
+              <label for='dsPath' class='col-sm-2 control-label'>Document storage path</label>
               <div class='col-sm-7'>
                 <input type='text' value.bind='dsPath' class='form-control' id='dsPath'>
               </div>
@@ -61,7 +61,9 @@
     </div>
     <div class='row'>
       <div class='col-sm-12'>
-        <div class='row'><h3>Synthesis jobs which have been run from this browser</h3></div>
+        <div class='row'>
+          <h3>Synthesis jobs which have been run from this browser</h3>
+        </div>
         <div class='row'>
           <table class='table table-hover table-vcenter'>
             <tbody>
@@ -93,7 +95,7 @@
                   <button click.trigger='refreshJob(job.job_id)' class='btn btn-default fa fa-refresh'></button>
                 </td>
                 <td class='text-center'>
-                  <button click.trigger='validateJob(job.job_id)' class='btn btn-default fa fa-share'></button>
+                  <a route-href='route: validation; params.bind: {id: job.job_id}' class='btn btn-default fa fa-share'></a>
                 </td>
                 <td class='text-center'>
                   <button click.trigger='removeJob(job.job_id)' class='btn btn-default fa fa-remove'></button>

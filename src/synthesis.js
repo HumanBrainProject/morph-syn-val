@@ -1,13 +1,12 @@
 import {inject} from 'aurelia-framework';
+import {Router} from 'aurelia-router';
 import {HttpClient, json} from 'aurelia-fetch-client';
 import {HbpHttpClient, OidcHttpClient} from './httpClients.js';
+import Job from './job';
 
 
-@inject(HttpClient, HbpHttpClient, OidcHttpClient)
-export class Synthesis {
-  locStoreId = 'morph-syn-job-ids';
-  jobs = new Map();
-
+@inject(HttpClient, HbpHttpClient, OidcHttpClient, Router)
+export class Synthesis extends Job {
   synthesisTaskName = 'morphology_synthesis';
   synthesisTask;
   synthesisTaskVersion;
@@ -20,54 +19,18 @@ export class Synthesis {
   brainRegion = 'hippocampal formation';
   brainRegionValues = ['hippocampal formation', 'Cerebral cortex'];
   cells = 10;
-  processing = false;
   jobIds = [];
 
   launchingJob = false;
 
-  constructor(http, hbpHttp, oidcHttp) {
-    this.http = http;
-    this.hbpHttp = hbpHttp;
+  constructor(http, hbpHttp, oidcHttp, router) {
+    super('morph-syn-job-ids', hbpHttp);
+    this.http     = http;
+    this.hbpHttp  = hbpHttp;
     this.oidcHttp = oidcHttp;
+    this.router   = router;
 
     this.refreshSynthesisTaskVersions();
-
-    if (!localStorage.getItem(this.locStoreId)) {
-      localStorage.setItem(this.locStoreId, JSON.stringify([]));
-    }
-
-    this.getJobIds().filter(v => v).map(jobId => {
-      this.refreshJob(jobId);
-    });
-  }
-
-  getJobIds() {
-    return JSON.parse(localStorage.getItem(this.locStoreId));
-  }
-
-  addJob(jobId) {
-    let jobIds = this.getJobIds();
-    jobIds.push(jobId);
-    localStorage.setItem(this.locStoreId, JSON.stringify(jobIds.filter(v => v)));
-
-    this.refreshJob(jobId);
-  }
-
-  removeJob(jobId) {
-    let jobIds = this.getJobIds();
-    var index = jobIds.indexOf(jobId);
-    if (index > -1) {
-      jobIds.splice(index, 1);
-    }
-    localStorage.setItem(this.locStoreId, JSON.stringify(jobIds.filter(v => v)));
-    this.jobs.delete(jobId);
-  }
-
-  refreshJob(jobId) {
-    this.hbpHttp.fetch('task/v0/api/job/' + jobId)
-    .then(response => response.json()).then(job => {
-      this.jobs.set(jobId, job);
-    });
   }
 
   refreshSynthesisTaskVersions() {
@@ -90,7 +53,6 @@ export class Synthesis {
 
   submit() {
     this.launchingJob = true;
-    this.processing = true;
     this.makeNipRequest()
     .then(() => {
       return this.hbpHttp.fetch('task/v0/api/job/', {
@@ -100,7 +62,6 @@ export class Synthesis {
           total_physical_memory: 2048,
           cpu_cores: 1,
           output_location: this.dsPath,
-          // requested_queue: 'cscs_viz_webruns',
           requested_queue: 'cscs_viz',
           job_name: 'morph_synth_' + new Date().toISOString(),
           'arguments': [{
@@ -118,7 +79,6 @@ export class Synthesis {
     })
     .then(response => response.json())
     .then(data => {
-      console.log('data', data);
       this.addJob(data.job_id);
       this.launchingJob = false;
     })
@@ -136,7 +96,6 @@ export class Synthesis {
     return this.http.fetch(url)
       .then(response => response.json())
       .then(data => {
-        console.log('data', data);
         let uuid = data.hits[0].source.representations[0].access;
         this.configUuid = uuid;
       });

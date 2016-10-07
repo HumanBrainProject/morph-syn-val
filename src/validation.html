@@ -1,51 +1,99 @@
 <template>
-  <section class="au-animate">
-    <h2>${heading}</h2>
-    <div class='container-fluid'>
-      <div class='row'>Synthesis jobs, which have been run from this browser:</div>
-      <div class='row'>
-        <ul>
-          <li repeat.for="jobId of jobIds">
-            <a href='https://up.humanbrainproject.eu/#/job/${jobId}/?back=%2Fjob-manager' target="_blank">${synthesisJobs[jobId].job_name}</a>
-            <span with.bind='synthesisJobs[jobId].output'>${name} ${uuid}</span>
-          </li>
-        </ul>
+  <section class='au-animate' class='container-fluid'>
+    <br />
+    <div class='row'>
+      <div class='col-sm-12'>
+        <form class='form-horizontal' role='form' submit.delegate='submit()'>
+          <fieldset disabled.bind='launchingJob'>
+            <div class='form-group'>
+              <label for='taskName' class='col-sm-2 control-label'>Task name</label>
+              <div class='col-sm-7'>
+                <input type='text' value.bind='validationTaskName' class='form-control' id='taskName' readonly>
+              </div>
+              <label for='validationTaskVersion' class='col-sm-1 control-label'>Version</label>
+              <div class='col-sm-1'>
+                <select value.bind='validationTaskVersion' class='form-control' id='synthesisTaskVersion'>
+                  <option repeat.for='version of validationTaskVersions'>${version}</option>
+                </select>
+              </div>
+              <div>
+                <button class='btn btn-default fa fa-refresh' click.trigger='refreshValidationTaskVersions()'></button>
+              </div>
+            </div>
+            <div class='form-group'>
+              <label for='dsPath' class='col-sm-2 control-label'>Document storage path</label>
+              <div class='col-sm-7'>
+                <input type='text' value.bind='dsPath' class='form-control' id='dsPath'>
+              </div>
+            </div>
+            <div class='form-group'>
+              <label for='bioRefUuid' class='col-sm-2 control-label'>Biological reference set uuid</label>
+              <div class='col-sm-7'>
+                <input type='text' value.bind='bioRefUuid' class='form-control' id='bioRefUuid' readonly>
+              </div>
+            </div>
+            <div class='form-group'>
+              <label for='synJobUuid' class='col-sm-2 control-label'>Synthesis job uuid</label>
+              <div class='col-sm-7'>
+                <input type='text' value.bind='synJobUuid' class='form-control' id='synJobUuid' readonly>
+              </div>
+            </div>
+            <div class='form-group'>
+              <label for='synthesisOutputUuid' class='col-sm-2 control-label'>Synthesis output uuid</label>
+              <div class='col-sm-7'>
+                <input type='text' value.bind='synthesisOutputUuid' class='form-control' id='synthesisOutputUuid'>
+              </div>
+              <i show.bind='loadingSynUuid' class='fa fa-spinner fa-spin fa-2x'></i>
+            </div>
+            <div class='form-group'>
+              <button type='submit' class='btn btn-default btn-primary col-sm-offset-7'>Run validation task</button>
+            </div>
+          </fieldset>
+        </form>
       </div>
     </div>
-    <form class='form-horizontal' role='form' submit.delegate='submit()'>
-      <div class='form-group'>
-        <label for='taskName' class='col-sm-2 control-label'>Validation task name</label>
-        <div class="col-sm-5">
-          <input type='text' value.bind='validationTaskName' class='form-control' id='taskName' readonly>
+    <div class='row'>
+      <div class='col-sm-12'>
+        <div class='row'>
+          <h3>Validation jobs which have been run from this browser</h3>
         </div>
-        <label for='validationTaskVersion' class='col-sm-1 control-label'>version</label>
-        <div class="col-sm-1">
-          <select value.bind='validationTaskVersion' class="form-control" id='synthesisTaskVersion'>
-            <option repeat.for="version of validationTaskVersions">${version}</option>
-          </select>
+        <div class='row'>
+          <table class='table table-hover table-vcenter'>
+            <tbody>
+              <tr>
+                <th>Job name</th>
+                <th>UUID</th>
+                <th>Status</th>
+                <th class='text-center'>Show details</th>
+                <th class='text-center'>Refresh</th>
+                <th class='text-center'>Remove</th>
+              </tr>
+              <tr repeat.for='[uuid, job] of jobs'>
+                <td class='vertical-align'>
+                  <span>${job.job_name}</span>
+                </td>
+                <td class='vertical-align'>
+                  <code>${uuid}</code>
+                </td>
+                <td class='vertical-align'>
+                  ${job.state}
+                </td>
+                <td class='text-center'>
+                  <a href='https://up.humanbrainproject.eu/#/job/${uuid}/?back=%2Fjob-manager' target='_blank'>
+                    <button class='btn btn-default fa fa-link'></button>
+                  </a>
+                </td>
+                <td class='text-center'>
+                  <button click.trigger='refreshJob(job.job_id)' class='btn btn-default fa fa-refresh'></button>
+                </td>
+                <td class='text-center'>
+                  <button click.trigger='removeJob(job.job_id)' class='btn btn-default fa fa-remove'></button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
-      <div class='form-group'>
-        <label for='dsPath' class='col-sm-2 control-label'>Document storage path</label>
-        <div class="col-sm-5">
-          <input type='text' value.bind='dsPath' class='form-control' id='dsPath'>
-        </div>
-      </div>
-      <div class='form-group'>
-        <label for='bioRefUuid' class='col-sm-2 control-label'>Biological reference set uuid</label>
-        <div class="col-sm-5">
-          <input type='text' value.bind='bioRefUuid' class='form-control' id='bioRefUuid' readonly>
-        </div>
-      </div>
-      <div class='form-group'>
-        <label for='synthesisOutputUuid' class='col-sm-2 control-label'>Synthesis output uuid</label>
-        <div class="col-sm-5">
-          <input type='text' value.bind='synthesisOutputUuid' class='form-control' id='synthesisOutputUuid'>
-        </div>
-      </div>
-      <div class='form-group'>
-        <button type='submit' class='btn btn-default col-sm-offset-2 col-sm-2'>Run validation task</button>
-      </div>
-    </form>
+    </div>
   </section>
 </template>

@@ -8,7 +8,5 @@ export function configure(aurelia) {
       baseConfig.configure(authConfig);
     });
 
-  // check token is valid this.hbpHttp.fetch('oidc/userinfo').then(response => { if (!response.ok) { this.auth.logout(null, this.auth.config.providers.hbp.clientId); }});
-
   aurelia.start().then(() => aurelia.setRoot());
 }
