@@ -14,7 +14,17 @@ export class HbpHttpClient extends HttpClient {
           'Accept': 'application/json'
         }
       })
-      .withInterceptor(auth.tokenInterceptor);
+      .withInterceptor(auth.tokenInterceptor)
+      .withInterceptor({
+        response(response) {
+          // handle expired/revoked token when auth plugin still thinks it is authenticated
+          if (!response.ok && response.status === 401 && auth.isAuthenticated()) {
+            auth.logout().then(() => { window.location.reload(); });
+            throw 'Unauthorized';
+          }
+          return response;
+        }
+      });
     });
   }
 }
@@ -29,4 +39,3 @@ export class OidcHttpClient extends HttpClient {
     });
   }
 }
-

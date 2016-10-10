@@ -1,12 +1,12 @@
 import {inject} from 'aurelia-framework';
 import {HttpClient, json} from 'aurelia-fetch-client';
 import {HbpHttpClient, OidcHttpClient} from './httpClients.js';
-import {Synthesis} from './synthesis.js';
 import Job from './job';
+import Config from './config';
 
-@inject(HttpClient, HbpHttpClient, OidcHttpClient, Synthesis)
+@inject(HttpClient, HbpHttpClient, OidcHttpClient, Config)
 export class Validation extends Job {
-  bioRefUuid = '50f86ce7-613b-40b8-83ae-6697185d5593';
+  bioRefUuid;
 
   synJobUuid;
 
@@ -17,18 +17,22 @@ export class Validation extends Job {
   validationTaskVersion;
   validationTaskVersions = [];
 
-  dsPath = '/Genrich Sandbox 2/m30';
+  dsPath;
 
   launchingJob = false;
   loadingSynUuid = false;
 
-  constructor(http, hbpHttp, oidcHttp) {
+  constructor(http, hbpHttp, oidcHttp, config) {
     super('morph-val-job-ids', hbpHttp);
     this.http = http;
     this.hbpHttp = hbpHttp;
     this.oidcHttp = oidcHttp;
+    this.config   = config;
 
     this.refreshValidationTaskVersions();
+
+    this.dsPath = config.valDsPath;
+    this.bioRefUuid = config.bioRefUuid;
   }
 
   activate(params) {
@@ -51,6 +55,11 @@ export class Validation extends Job {
         });
       }
     });
+  }
+
+  deactivate() {
+    this.config.valDsPath = this.dsPath;
+    this.config.bioRefUuid = this.bioRefUuid;
   }
 
   refreshValidationTaskVersions() {

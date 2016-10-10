@@ -1,5 +1,5 @@
 export default class Job {
-  jobs = new Map();
+  jobs = new Array();
   locStoreId;
 
   constructor(locStoreId, hbpHttp) {
@@ -29,18 +29,31 @@ export default class Job {
 
   removeJob(jobId) {
     let jobIds = this.getJobIds();
-    var index = jobIds.indexOf(jobId);
+    let index = jobIds.indexOf(jobId);
     if (index > -1) {
       jobIds.splice(index, 1);
     }
     localStorage.setItem(this.locStoreId, JSON.stringify(jobIds.filter(v => v)));
-    this.jobs.delete(jobId);
+
+    index = this.jobs.findIndex(element => element.job_id === jobId);
+    if (index > -1) {
+      this.jobs.splice(index, 1);
+    }
   }
 
   refreshJob(jobId) {
+    let index = this.jobs.findIndex(element => element.job_id === jobId);
     this.hbpHttp.fetch('task/v0/api/job/' + jobId)
     .then(response => response.json()).then(job => {
-      this.jobs.set(jobId, job);
+      if (index !== -1) {
+        this.jobs[index] = job;
+      } else {
+        this.jobs.push(job);
+      }
     });
+  }
+
+  printDate(value) {
+    return new Date(value).toLocaleString();
   }
 }

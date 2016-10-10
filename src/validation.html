@@ -1,4 +1,5 @@
 <template>
+  <require from="./sort"></require>
   <section class='au-animate' class='container-fluid'>
     <br />
     <div class='row'>
@@ -23,7 +24,7 @@
             <div class='form-group'>
               <label for='dsPath' class='col-sm-2 control-label'>Document storage path</label>
               <div class='col-sm-7'>
-                <input type='text' value.bind='dsPath' class='form-control' id='dsPath'>
+                <input type='text' value.bind='dsPath' class='form-control' id='dsPath' placeholder='/Your Collab/folder'>
               </div>
             </div>
             <div class='form-group'>
@@ -61,22 +62,26 @@
           <table class='table table-hover table-vcenter'>
             <tbody>
               <tr>
-                <th>Job name</th>
                 <th>UUID</th>
+                <th>Started</th>
                 <th>Status</th>
+                <th>Result</th>
                 <th class='text-center'>Show details</th>
                 <th class='text-center'>Refresh</th>
                 <th class='text-center'>Remove</th>
               </tr>
-              <tr repeat.for='[uuid, job] of jobs'>
+              <tr repeat.for='job of jobs | sort'>
                 <td class='vertical-align'>
-                  <span>${job.job_name}</span>
+                  <code>${job.job_id}</code>
                 </td>
                 <td class='vertical-align'>
-                  <code>${uuid}</code>
+                  <span>${printDate(job.start_time)}</span>
                 </td>
                 <td class='vertical-align'>
                   ${job.state}
+                </td>
+                <td class='vertical-align'>
+                  ${job.finish_reason}
                 </td>
                 <td class='text-center'>
                   <a href='https://up.humanbrainproject.eu/#/job/${uuid}/?back=%2Fjob-manager' target='_blank'>

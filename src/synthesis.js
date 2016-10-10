@@ -3,34 +3,47 @@ import {Router} from 'aurelia-router';
 import {HttpClient, json} from 'aurelia-fetch-client';
 import {HbpHttpClient, OidcHttpClient} from './httpClients.js';
 import Job from './job';
+import Config from './config';
 
 
-@inject(HttpClient, HbpHttpClient, OidcHttpClient, Router)
+@inject(HttpClient, HbpHttpClient, OidcHttpClient, Router, Config)
 export class Synthesis extends Job {
   synthesisTaskName = 'morphology_synthesis';
   synthesisTask;
   synthesisTaskVersion;
   synthesisTaskVersions = [];
 
-  dsPath = '/Genrich Sandbox 2/m30';
-  gpfsPath = '/gpfs/bbp.cscs.ch/project/proj30/genrich';
-  randomSeed = 1234;
+  dsPath;
+  gpfsPath;
+  randomSeed;
   configUuid;
   brainRegion = 'hippocampal formation';
   brainRegionValues = ['hippocampal formation', 'Cerebral cortex'];
-  cells = 10;
-  jobIds = [];
+  cells;
 
   launchingJob = false;
 
-  constructor(http, hbpHttp, oidcHttp, router) {
+  constructor(http, hbpHttp, oidcHttp, router, config) {
     super('morph-syn-job-ids', hbpHttp);
     this.http     = http;
     this.hbpHttp  = hbpHttp;
     this.oidcHttp = oidcHttp;
     this.router   = router;
+    this.config   = config;
 
     this.refreshSynthesisTaskVersions();
+    
+    this.dsPath = config.synDsPath;
+    this.gpfsPath = config.gpfsPath;
+    this.randomSeed = config.randomSeed;
+    this.cells = config.cells;
+  }
+
+  deactivate() {
+    this.config.synDsPath = this.dsPath;
+    this.config.gpfsPath = this.gpfsPath;
+    this.config.randomSeed = this.randomSeed;
+    this.config.cells = this.cells;
   }
 
   refreshSynthesisTaskVersions() {
