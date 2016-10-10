@@ -186,7 +186,7 @@ System.config({
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
     "npm:font-awesome@4.6.3": {
-      "css": "github:systemjs/plugin-css@0.1.31"
+      "css": "github:systemjs/plugin-css@0.1.30"
     },
     "npm:inherits@2.0.1": {
       "util": "github:jspm/nodelibs-util@0.1.0"
@@ -227,27 +227,30 @@ System.config({
       "aurelia-router",
       "aurelia-fetch-client",
       "./httpClients.js",
-      "./job"
+      "./job",
+      "./config"
     ],
     "validation.js": [
       "aurelia-framework",
       "aurelia-fetch-client",
       "./httpClients.js",
-      "./synthesis.js",
-      "./job"
+      "./job",
+      "./config"
     ]
   },
   bundles: {
-    "app-build-bcff1c19b2.js": [
+    "app-build-ae5c347d37.js": [
       "app.html!github:systemjs/plugin-text@0.0.8.js",
       "app.js",
       "authConfig.js",
+      "config.js",
       "httpClients.js",
       "job.js",
       "login.html!github:systemjs/plugin-text@0.0.8.js",
       "login.js",
       "main.js",
       "nav-bar.html!github:systemjs/plugin-text@0.0.8.js",
+      "sort.js",
       "synthesis.html!github:systemjs/plugin-text@0.0.8.js",
       "synthesis.js",
       "validation.html!github:systemjs/plugin-text@0.0.8.js",
