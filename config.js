@@ -186,7 +186,7 @@ System.config({
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
     "npm:font-awesome@4.6.3": {
-      "css": "github:systemjs/plugin-css@0.1.30"
+      "css": "github:systemjs/plugin-css@0.1.31"
     },
     "npm:inherits@2.0.1": {
       "util": "github:jspm/nodelibs-util@0.1.0"
@@ -238,7 +238,7 @@ System.config({
     ]
   },
   bundles: {
-    "app-build-4f80975fcf.js": [
+    "app-build-bcff1c19b2.js": [
       "app.html!github:systemjs/plugin-text@0.0.8.js",
       "app.js",
       "authConfig.js",
